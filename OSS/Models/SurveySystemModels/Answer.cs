@@ -13,7 +13,7 @@ namespace OSS.Models.SurveySystemModels
         public int QuestionId { get; set; }
         public Question Question { get; set; }
 
-        //public int QuestionAnswerId { get; set; }
+        public int QuestionAnswerId { get; set; }
         public QuestionAnswer QuestionAnswer { get; set; }
 
         public int StudentId { get; set; }
