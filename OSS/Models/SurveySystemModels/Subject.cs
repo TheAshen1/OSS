@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace OSS.Models.SurveySystemModels
+{
+    public class Subject
+    {
+        public int SubjectId { get; set; }
+        public string ShortName { get; set; }
+        public string FullName { get; set; }
+
+        public List<LecturerSubject> LecturerSubjects { get; set; }
+    }
+}
