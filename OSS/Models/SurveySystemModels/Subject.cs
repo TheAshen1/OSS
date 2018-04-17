@@ -11,6 +11,6 @@ namespace OSS.Models.SurveySystemModels
         public string ShortName { get; set; }
         public string FullName { get; set; }
 
-        public List<LecturerSubject> LecturerSubjects { get; set; }
+        public List<LecturerSubject> SubjectLecturers { get; set; }
     }
 }
