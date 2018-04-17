@@ -11,9 +11,10 @@ using System;
 namespace OSS.Migrations
 {
     [DbContext(typeof(SurveySystemDbContext))]
-    partial class SurveySystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180417164951_IP")]
+    partial class IP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

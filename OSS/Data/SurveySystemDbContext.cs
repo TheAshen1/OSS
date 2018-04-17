@@ -68,6 +68,10 @@ namespace OSS.Data
         }
 
         public DbSet<OSS.Models.SurveySystemModels.LecturerSubject> LecturerSubject { get; set; }
+
+        public DbSet<OSS.Models.SurveySystemModels.SurveyQuestion> SurveyQuestion { get; set; }
+
+        public DbSet<OSS.Models.SurveySystemModels.QuestionAnswer> QuestionAnswer { get; set; }
     }
 
 }

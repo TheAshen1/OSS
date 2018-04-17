@@ -9,6 +9,8 @@ namespace OSS.Models.SurveySystemModels
     {
         public int StudentId { get; set; }
 
+        public string StudentIP { get; set; }
+
         public int FacultyId { get; set; }
         public Faculty Faculty { get; set; }
 
