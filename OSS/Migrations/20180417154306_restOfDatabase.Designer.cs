@@ -11,9 +11,10 @@ using System;
 namespace OSS.Migrations
 {
     [DbContext(typeof(SurveySystemDbContext))]
-    partial class SurveySystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180417154306_restOfDatabase")]
+    partial class restOfDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -10,5 +10,8 @@ namespace OSS.Models.SurveySystemModels
         public int FacultyId { get; set; }
         public string ShortName { get; set; }
         public string FullName { get; set; }
+
+        public List<Student> Students { get; set; }
+
     }
 }

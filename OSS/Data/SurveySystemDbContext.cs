@@ -17,6 +17,8 @@ namespace OSS.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<Survey> Surveys { get; set; }
 
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Answer> Answers { get; set; }
 
         public SurveySystemDbContext(DbContextOptions<SurveySystemDbContext> options) : base(options)
         {
@@ -26,8 +28,9 @@ namespace OSS.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //many-to-many
+            // composite PK
             modelBuilder.Entity<LecturerSubject>()
-           .HasKey(t => new { t.LecturerId, t.SubjectId });
+                .HasKey(t => new { t.LecturerId, t.SubjectId });
 
             modelBuilder.Entity<LecturerSubject>()
                 .HasOne(ls => ls.Lecturer)
@@ -40,8 +43,9 @@ namespace OSS.Data
                 .HasForeignKey(ls => ls.SubjectId);
 
             //many-to-many
+            // composite PK
             modelBuilder.Entity<SurveyQuestion>()
-            .HasKey(t => new { t.QuestionId, t.SurveyId });
+                .HasKey(t => new { t.QuestionId, t.SurveyId });
 
             modelBuilder.Entity<SurveyQuestion>()
                 .HasOne(sq => sq.Survey)
@@ -52,6 +56,15 @@ namespace OSS.Data
                 .HasOne(qs => qs.Question)
                 .WithMany(s => s.QuestionSurveys)
                 .HasForeignKey(qs => qs.QuestionId);
+
+            // composite key
+            modelBuilder.Entity<Answer>()
+                .HasKey(t => new { t.StudentId, t.SurveyId, t.QuestionId, t.LecturerId, t.SubjectId});
+
+           // modelBuilder.Entity<Answer>()
+           //.HasOne(qa => qa.QuestionAnswer)
+           //.WithOne(a =>a.Answer)
+           //.HasForeignKey<QuestionAnswer>(a => a.AnswerId);
         }
 
         public DbSet<OSS.Models.SurveySystemModels.LecturerSubject> LecturerSubject { get; set; }
