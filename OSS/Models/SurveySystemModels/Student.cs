@@ -11,8 +11,8 @@ namespace OSS.Models.SurveySystemModels
 
         public string StudentIP { get; set; }
 
-        public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
+        //public int FacultyId { get; set; }
+        //public Faculty Faculty { get; set; }
 
         public int SpecialtyId { get; set; }
         public Specialty Specialty { get; set; }

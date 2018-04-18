@@ -13,11 +13,11 @@
     <thead>
         <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.StudentIP)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Gender)
                 </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Faculty)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Specialty)
             </th>
@@ -28,10 +28,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Gender)
+                @Html.DisplayFor(modelItem => item.StudentIP)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Faculty.FacultyId)
+                @Html.DisplayFor(modelItem => item.Gender)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Specialty.SpecialtyId)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using OSS.Models.SurveySystemModels;
 
 namespace OSS.Controllers
 {
-    [Authorize]
     public class StudentsController : Controller
     {
         private readonly SurveySystemDbContext _context;
@@ -24,7 +22,7 @@ namespace OSS.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
-            var surveySystemDbContext = _context.Students.Include(s => s.Faculty).Include(s => s.Specialty);
+            var surveySystemDbContext = _context.Students.Include(s => s.Specialty);
             return View(await surveySystemDbContext.ToListAsync());
         }
 
@@ -37,7 +35,6 @@ namespace OSS.Controllers
             }
 
             var student = await _context.Students
-                .Include(s => s.Faculty)
                 .Include(s => s.Specialty)
                 .SingleOrDefaultAsync(m => m.StudentId == id);
             if (student == null)
@@ -51,7 +48,6 @@ namespace OSS.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId");
             return View();
         }
@@ -61,7 +57,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentId,FacultyId,SpecialtyId,Gender")] Student student)
+        public async Task<IActionResult> Create([Bind("StudentId,StudentIP,SpecialtyId,Gender")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +65,6 @@ namespace OSS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", student.FacultyId);
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId", student.SpecialtyId);
             return View(student);
         }
@@ -87,7 +82,6 @@ namespace OSS.Controllers
             {
                 return NotFound();
             }
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", student.FacultyId);
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId", student.SpecialtyId);
             return View(student);
         }
@@ -97,7 +91,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentId,FacultyId,SpecialtyId,Gender")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("StudentId,StudentIP,SpecialtyId,Gender")] Student student)
         {
             if (id != student.StudentId)
             {
@@ -124,7 +118,6 @@ namespace OSS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", student.FacultyId);
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId", student.SpecialtyId);
             return View(student);
         }
@@ -138,7 +131,6 @@ namespace OSS.Controllers
             }
 
             var student = await _context.Students
-                .Include(s => s.Faculty)
                 .Include(s => s.Specialty)
                 .SingleOrDefaultAsync(m => m.StudentId == id);
             if (student == null)

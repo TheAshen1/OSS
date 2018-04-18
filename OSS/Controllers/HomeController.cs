@@ -22,8 +22,8 @@ namespace OSS.Controllers
         public IActionResult Index()
         {
 
-            ViewData["Faculties"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId");
-            ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId");
+            ViewData["Faculties"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
+            ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyCode");
 
             return View();
         }
