@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using OSS.Models.SurveySystemModels;
 
 namespace OSS.Controllers
 {
+    [Authorize]
     public class StudentsController : Controller
     {
         private readonly SurveySystemDbContext _context;
@@ -49,7 +51,7 @@ namespace OSS.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId");
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId");
             return View();
         }

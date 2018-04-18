@@ -4,14 +4,27 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using OSS.Data;
 using OSS.Models;
 
 namespace OSS.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly SurveySystemDbContext _context;
+
+        public HomeController(SurveySystemDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
+
+            ViewData["Faculties"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId");
+            ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId");
+
             return View();
         }
 

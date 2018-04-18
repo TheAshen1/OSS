@@ -29,6 +29,7 @@ namespace OSS
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -38,7 +39,8 @@ namespace OSS
 
             services.AddMvc();
 
-            services.AddDbContext<SurveySystemDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SurveySystemDbConnection")));
+            services.AddDbContext<SurveySystemDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("SurveySystemDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
