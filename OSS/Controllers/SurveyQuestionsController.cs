@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using OSS.Models.SurveySystemModels;
 
 namespace OSS.Controllers
 {
-    [Authorize]
     public class SurveyQuestionsController : Controller
     {
         private readonly SurveySystemDbContext _context;

@@ -22,7 +22,7 @@ namespace OSS.Data
 
         public SurveySystemDbContext(DbContextOptions<SurveySystemDbContext> options) : base(options)
         {
-
+         
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

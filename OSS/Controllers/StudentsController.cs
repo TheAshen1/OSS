@@ -65,7 +65,7 @@ namespace OSS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyId", student.SpecialtyId);
+            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "SpecialtyId", "FullName", student.SpecialtyId);
             return View(student);
         }
 

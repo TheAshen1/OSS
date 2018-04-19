@@ -33,3 +33,15 @@
         display: none;
     }
 }
+
+.marginTop {
+    margin-top: 10px;
+}
+
+.marginBot {
+    margin-bottom: 10px;
+}
+
+.paddingTop{
+    padding-top: 10px;
+}

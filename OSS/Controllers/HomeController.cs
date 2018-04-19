@@ -24,7 +24,8 @@ namespace OSS.Controllers
 
             ViewData["Faculties"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
             ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyCode");
-
+            ViewData["Lecturers"] = new SelectList(_context.Lecturers, "LecturerId", "FirstName");
+            ViewData["Subjects"] = new SelectList(_context.Subjects, "SubjectId", "FullName");
             return View();
         }
 
@@ -45,6 +46,11 @@ namespace OSS.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult SurveySubmit()
+        {
+            return View("Success");
         }
     }
 }

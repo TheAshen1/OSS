@@ -22,9 +22,38 @@ namespace OSS.Data
                     new Faculty { FullName = "Факультет подготовки иностранных граждан", ShortName = "ФСФ" }
                     );
             }
+            context.SaveChanges();
+            if (!context.Surveys.Any())
+            {
+                context.Surveys.Add(
+                    new Survey
+                    {
+                        Name = "Best lecturer"
+                    }
+                    );
+            }
+            context.SaveChanges();
+            if (!context.Questions.Any())
+            {
+                context.Questions.AddRange(
+                    new Question { Text = "First question" },
+                    new Question { Text = "Second question" },
+                    new Question { Text = "Third question" },
+                    new Question { Text = "Fifth question" },
+                    new Question { Text = "Sixth question" }
+                    );
+            }
+            context.SaveChanges();
 
+            var id = context.Surveys.Where(s => s.Name == "Best lecturer").FirstOrDefault().SurveyId;
 
+            var questions = context.Questions.AsEnumerable();
 
+            foreach (Question q in questions)
+            {
+                context.SurveyQuestion.Add(new SurveyQuestion() { QuestionId = q.QuestionId, SurveyId = id });
+            }
+                
 
             context.SaveChanges();
         }
