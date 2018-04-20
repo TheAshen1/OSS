@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Internal;
 using OSS.Data;
 using OSS.Models;
+using OSS.Models.SurveySystemModels;
 
 namespace OSS.Controllers
 {
@@ -26,7 +29,15 @@ namespace OSS.Controllers
             ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyCode");
             ViewData["Lecturers"] = new SelectList(_context.Lecturers, "LecturerId", "FirstName");
             ViewData["Subjects"] = new SelectList(_context.Subjects, "SubjectId", "FullName");
-            return View();
+
+            var id = _context.Surveys.Where(s => s.Name == "Best lecturer").FirstOrDefault().SurveyId;
+
+            var query = _context.Questions  
+                .Where(q => q.SurveyId == id);
+
+            //ViewData["Questions"] = query.ToList();
+            
+            return View(query.AsEnumerable());
         }
 
         public IActionResult About()
@@ -48,9 +59,18 @@ namespace OSS.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult SurveySubmit()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Produces("text/html")]
+        public IActionResult SurveySubmit(int FacultyId, int SpecialtyId, int LecturerId, int SubjectId, params int[] answers)
         {
-            return View("Success");
+            StringBuilder str = new StringBuilder();
+
+            foreach (var a in Request.Form)
+            {
+                str.AppendFormat("{0}: {1} \n", a.Key, a.Value);
+            }
+            return Content(str.ToString());
         }
     }
 }

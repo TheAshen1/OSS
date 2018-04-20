@@ -10,6 +10,7 @@ namespace OSS.Models.SurveySystemModels
         public int QuestionId { get; set; }
         public string Text { get; set; }
 
-        public List<SurveyQuestion> QuestionSurveys { get; set; }
+        public int SurveyId { get; set; }
+        public Survey Survey { get; set; }
     }
 }

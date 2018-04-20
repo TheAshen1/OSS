@@ -1,10 +1,10 @@
-﻿@model OSS.Models.SurveySystemModels.Student
+﻿@model IEnumerable<OSS.Models.SurveySystemModels.Question>
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="row">
-    <div class="jumbotron">
+    <div class="jumbotron marginTop">
         <h2>Best lecturer survey</h2>
     </div>
 
@@ -15,30 +15,44 @@
 
             <div class="form-group">
                 <label class="control-label">Faculty</label>
-                <select class="form-control" asp-items="ViewBag.Faculties"></select>
+                <select class="form-control" name="FacultyId" asp-items="ViewBag.Faculties"></select>
             </div>
 
             <div class="form-group">
                 <label class="control-label">Specialty</label>
-                <select asp-for="SpecialtyId" class="form-control" asp-items="ViewBag.Specialties"></select>
+                <select class="form-control" name="SpecialtyId" asp-items="ViewBag.Specialties" required ></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Gender</label>
+                <input type="radio" name="Gender" value="Male" required />
+                <input type="radio" name="Gender" value="Female" required />
             </div>
             <div class="form-group">
                 <label class="control-label">Lecturer</label>
-                <select asp-for="SpecialtyId" class="form-control" asp-items="ViewBag.Lecturers"></select>
+                <select class="form-control" name="LecturerId" asp-items="ViewBag.Lecturers" required ></select>
             </div>
             <div class="form-group">
                 <label class="control-label">Subject</label>
-                <select asp-for="SpecialtyId" class="form-control" asp-items="ViewBag.Subjects"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default marginTop" />
+                <select class="form-control" name="SubjectId" asp-items="ViewBag.Subjects" required ></select>
             </div>
 
         </div>
 
         <div class="col-md-8">
-            <p>questions</p>
-            @*@await Html.PartialAsync("QuestionListPartial")*@
+
+            @foreach (var q in Model)
+            {               
+                <p>@q.Text</p>
+                @for(var i = 1; i <= 12; i++)
+                {
+                    <input type="radio" name="@q.QuestionId" value="@i"/>
+                }
+            }
+
+             <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-default marginTop" />
+            </div>
+
         </div>
     </div>
 </form>

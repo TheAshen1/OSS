@@ -13,6 +13,8 @@ namespace OSS.Models.SurveySystemModels
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }
 
-        public List<SurveyQuestion> SurveyQuestions { get; set; }
+        public List<Question> Questions { get; set; }
+
+        public List<Answer> Answers { get; set; }
     }
 }

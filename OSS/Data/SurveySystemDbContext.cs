@@ -27,10 +27,12 @@ namespace OSS.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             //many-to-many
             // composite PK
             modelBuilder.Entity<LecturerSubject>()
                 .HasKey(t => new { t.LecturerId, t.SubjectId });
+
 
             modelBuilder.Entity<LecturerSubject>()
                 .HasOne(ls => ls.Lecturer)
@@ -42,34 +44,41 @@ namespace OSS.Data
                 .WithMany(s => s.SubjectLecturers)
                 .HasForeignKey(ls => ls.SubjectId);
 
+
+            //do not cascade when Specialty is deleted
+            modelBuilder.Entity<Student>()
+                .HasOne(s=>s.Specialty)
+                .WithMany(s => s.Students)
+                .OnDelete(DeleteBehavior.SetNull);
+            //do not cascade when Survey is deleted
+            modelBuilder.Entity<Answer>()
+                .HasOne(a => a.Survey)
+                .WithMany(s => s.Answers)
+                .OnDelete(DeleteBehavior.Restrict);
             //many-to-many
             // composite PK
-            modelBuilder.Entity<SurveyQuestion>()
-                .HasKey(t => new { t.QuestionId, t.SurveyId });
+            //modelBuilder.Entity<SurveyQuestion>()
+            //    .HasKey(t => new { t.QuestionId, t.SurveyId });
 
-            modelBuilder.Entity<SurveyQuestion>()
-                .HasOne(sq => sq.Survey)
-                .WithMany(q => q.SurveyQuestions)
-                .HasForeignKey(sq => sq.SurveyId);
+            //modelBuilder.Entity<SurveyQuestion>()
+            //    .HasOne(sq => sq.Survey)
+            //    .WithMany(q => q.SurveyQuestions)
+            //    .HasForeignKey(sq => sq.SurveyId);
 
-            modelBuilder.Entity<SurveyQuestion>()
-                .HasOne(qs => qs.Question)
-                .WithMany(s => s.QuestionSurveys)
-                .HasForeignKey(qs => qs.QuestionId);
+            //modelBuilder.Entity<SurveyQuestion>()
+            //    .HasOne(qs => qs.Question)
+            //    .WithMany(s => s.QuestionSurveys)
+            //    .HasForeignKey(qs => qs.QuestionId);
 
             // composite key
             modelBuilder.Entity<Answer>()
                 .HasKey(t => new { t.StudentId, t.SurveyId, t.QuestionId, t.LecturerId, t.SubjectId});
 
-           // modelBuilder.Entity<Answer>()
-           //.HasOne(qa => qa.QuestionAnswer)
-           //.WithOne(a =>a.Answer)
-           //.HasForeignKey<QuestionAnswer>(a => a.AnswerId);
         }
 
         public DbSet<OSS.Models.SurveySystemModels.LecturerSubject> LecturerSubject { get; set; }
 
-        public DbSet<OSS.Models.SurveySystemModels.SurveyQuestion> SurveyQuestion { get; set; }
+       // public DbSet<OSS.Models.SurveySystemModels.SurveyQuestion> SurveyQuestion { get; set; }
 
         public DbSet<OSS.Models.SurveySystemModels.QuestionAnswer> QuestionAnswer { get; set; }
     }

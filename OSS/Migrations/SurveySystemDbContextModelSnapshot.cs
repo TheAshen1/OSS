@@ -100,9 +100,13 @@ namespace OSS.Migrations
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("SurveyId");
+
                     b.Property<string>("Text");
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("SurveyId");
 
                     b.ToTable("Questions");
                 });
@@ -187,19 +191,6 @@ namespace OSS.Migrations
                     b.ToTable("Surveys");
                 });
 
-            modelBuilder.Entity("OSS.Models.SurveySystemModels.SurveyQuestion", b =>
-                {
-                    b.Property<int>("QuestionId");
-
-                    b.Property<int>("SurveyId");
-
-                    b.HasKey("QuestionId", "SurveyId");
-
-                    b.HasIndex("SurveyId");
-
-                    b.ToTable("SurveyQuestion");
-                });
-
             modelBuilder.Entity("OSS.Models.SurveySystemModels.Answer", b =>
                 {
                     b.HasOne("OSS.Models.SurveySystemModels.Lecturer", "Lecturer")
@@ -228,9 +219,9 @@ namespace OSS.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("OSS.Models.SurveySystemModels.Survey", "Survey")
-                        .WithMany()
+                        .WithMany("Answers")
                         .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("OSS.Models.SurveySystemModels.LecturerSubject", b =>
@@ -243,6 +234,14 @@ namespace OSS.Migrations
                     b.HasOne("OSS.Models.SurveySystemModels.Subject", "Subject")
                         .WithMany("SubjectLecturers")
                         .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("OSS.Models.SurveySystemModels.Question", b =>
+                {
+                    b.HasOne("OSS.Models.SurveySystemModels.Survey", "Survey")
+                        .WithMany("Questions")
+                        .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -259,20 +258,7 @@ namespace OSS.Migrations
                     b.HasOne("OSS.Models.SurveySystemModels.Specialty", "Specialty")
                         .WithMany("Students")
                         .HasForeignKey("SpecialtyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("OSS.Models.SurveySystemModels.SurveyQuestion", b =>
-                {
-                    b.HasOne("OSS.Models.SurveySystemModels.Question", "Question")
-                        .WithMany("QuestionSurveys")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("OSS.Models.SurveySystemModels.Survey", "Survey")
-                        .WithMany("SurveyQuestions")
-                        .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }

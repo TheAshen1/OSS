@@ -11,8 +11,8 @@ using System;
 namespace OSS.Migrations
 {
     [DbContext(typeof(SurveySystemDbContext))]
-    [Migration("20180417163322_QuestionAnswerFix")]
-    partial class QuestionAnswerFix
+    [Migration("20180420084324_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,9 +101,13 @@ namespace OSS.Migrations
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("SurveyId");
+
                     b.Property<string>("Text");
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("SurveyId");
 
                     b.ToTable("Questions");
                 });
@@ -125,11 +129,15 @@ namespace OSS.Migrations
                     b.Property<int>("SpecialtyId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("FacultyId");
+
                     b.Property<string>("FullName");
 
                     b.Property<string>("SpecialtyCode");
 
                     b.HasKey("SpecialtyId");
+
+                    b.HasIndex("FacultyId");
 
                     b.ToTable("Specialties");
                 });
@@ -139,15 +147,13 @@ namespace OSS.Migrations
                     b.Property<int>("StudentId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("FacultyId");
-
                     b.Property<string>("Gender");
 
                     b.Property<int>("SpecialtyId");
 
-                    b.HasKey("StudentId");
+                    b.Property<string>("StudentIP");
 
-                    b.HasIndex("FacultyId");
+                    b.HasKey("StudentId");
 
                     b.HasIndex("SpecialtyId");
 
@@ -186,19 +192,6 @@ namespace OSS.Migrations
                     b.ToTable("Surveys");
                 });
 
-            modelBuilder.Entity("OSS.Models.SurveySystemModels.SurveyQuestion", b =>
-                {
-                    b.Property<int>("QuestionId");
-
-                    b.Property<int>("SurveyId");
-
-                    b.HasKey("QuestionId", "SurveyId");
-
-                    b.HasIndex("SurveyId");
-
-                    b.ToTable("SurveyQuestion");
-                });
-
             modelBuilder.Entity("OSS.Models.SurveySystemModels.Answer", b =>
                 {
                     b.HasOne("OSS.Models.SurveySystemModels.Lecturer", "Lecturer")
@@ -227,9 +220,9 @@ namespace OSS.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("OSS.Models.SurveySystemModels.Survey", "Survey")
-                        .WithMany()
+                        .WithMany("Answers")
                         .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("OSS.Models.SurveySystemModels.LecturerSubject", b =>
@@ -245,30 +238,28 @@ namespace OSS.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("OSS.Models.SurveySystemModels.Student", b =>
+            modelBuilder.Entity("OSS.Models.SurveySystemModels.Question", b =>
                 {
-                    b.HasOne("OSS.Models.SurveySystemModels.Faculty", "Faculty")
-                        .WithMany("Students")
-                        .HasForeignKey("FacultyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("OSS.Models.SurveySystemModels.Specialty", "Specialty")
-                        .WithMany("Students")
-                        .HasForeignKey("SpecialtyId")
+                    b.HasOne("OSS.Models.SurveySystemModels.Survey", "Survey")
+                        .WithMany("Questions")
+                        .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("OSS.Models.SurveySystemModels.SurveyQuestion", b =>
+            modelBuilder.Entity("OSS.Models.SurveySystemModels.Specialty", b =>
                 {
-                    b.HasOne("OSS.Models.SurveySystemModels.Question", "Question")
-                        .WithMany("QuestionSurveys")
-                        .HasForeignKey("QuestionId")
+                    b.HasOne("OSS.Models.SurveySystemModels.Faculty", "Faculty")
+                        .WithMany("Specialties")
+                        .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.HasOne("OSS.Models.SurveySystemModels.Survey", "Survey")
-                        .WithMany("SurveyQuestions")
-                        .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity("OSS.Models.SurveySystemModels.Student", b =>
+                {
+                    b.HasOne("OSS.Models.SurveySystemModels.Specialty", "Specialty")
+                        .WithMany("Students")
+                        .HasForeignKey("SpecialtyId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }
