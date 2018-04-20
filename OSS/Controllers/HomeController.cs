@@ -26,7 +26,7 @@ namespace OSS.Controllers
         {
 
             ViewData["Faculties"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
-            ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "SpecialtyCode");
+            ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "FullName");
             ViewData["Lecturers"] = new SelectList(_context.Lecturers, "LecturerId", "FirstName");
             ViewData["Subjects"] = new SelectList(_context.Subjects, "SubjectId", "FullName");
 
@@ -35,9 +35,11 @@ namespace OSS.Controllers
             var query = _context.Questions  
                 .Where(q => q.SurveyId == id);
 
-            //ViewData["Questions"] = query.ToList();
-            
-            return View(query.AsEnumerable());
+            ViewBag.SurveyId = id;
+
+            ViewData["Questions"] = query.ToList();
+
+            return View();
         }
 
         public IActionResult About()
@@ -61,16 +63,52 @@ namespace OSS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Produces("text/html")]
-        public IActionResult SurveySubmit(int FacultyId, int SpecialtyId, int LecturerId, int SubjectId, params int[] answers)
+        public IActionResult SurveySubmit(ViewModel model)
         {
             StringBuilder str = new StringBuilder();
 
-            foreach (var a in Request.Form)
+            //str.AppendFormat("{0}: {1} \n", "Факультет", model.FacultyId);
+            //str.AppendFormat("{0}: {1} \n", "Специальность", model.SpecialtyId);
+            //str.AppendFormat("{0}: {1} \n", "Пол", model.Gender);
+            //str.AppendFormat("{0}: {1} \n", "Предодаватель", model.LecturerId);
+            //str.AppendFormat("{0}: {1} \n", "Предмет", model.SubjectId);
+
+            var student = new Student()
             {
-                str.AppendFormat("{0}: {1} \n", a.Key, a.Value);
+                Gender = model.Gender,
+                SpecialtyId = model.SpecialtyId
+            };
+            var answers = new List<Answer>();
+
+            var query = _context.Questions
+               .Where(q => q.SurveyId == model.SurveyId);
+
+            var questions = query.ToList();
+            foreach (var q in questions)
+            {
+                answers.Add(
+                    new Answer()
+                    {
+                        Student = student,
+                        LecturerId = model.LecturerId,
+                        SubjectId = model.SubjectId,
+                        SurveyId = model.SurveyId,
+                        QuestionId = q.QuestionId,
+                        QuestionAnswer = new QuestionAnswer() {  Score = Int32.Parse( Request.Form[q.QuestionId.ToString()]) }                     
+                    }
+                );
             }
-            return Content(str.ToString());
+            _context.Answers.AddRange(answers);
+
+            _context.SaveChanges();
+
+
+            foreach (var p in Request.Form)
+            {
+                str.AppendFormat("{0}: {1} \n", p.Key, p.Value);
+            }
+
+            return View("Success");/* Content(str.ToString());*/
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OSS.Models.SurveySystemModels.Question>
+﻿@model OSS.Models.SurveySystemModels.ViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -15,41 +15,41 @@
 
             <div class="form-group">
                 <label class="control-label">Faculty</label>
-                <select class="form-control" name="FacultyId" asp-items="ViewBag.Faculties"></select>
+                <select asp-for="FacultyId" class="form-control" name="FacultyId" asp-items="ViewBag.Faculties"></select>
             </div>
 
             <div class="form-group">
                 <label class="control-label">Specialty</label>
-                <select class="form-control" name="SpecialtyId" asp-items="ViewBag.Specialties" required ></select>
+                <select asp-for="SpecialtyId" class="form-control" name="SpecialtyId" asp-items="ViewBag.Specialties" required></select>
             </div>
             <div class="form-group">
                 <label class="control-label">Gender</label>
-                <input type="radio" name="Gender" value="Male" required />
-                <input type="radio" name="Gender" value="Female" required />
+                <input asp-for="Gender" type="radio" name="Gender" value="Male" required />
+                <input asp-for="Gender" type="radio" name="Gender" value="Female" required />
             </div>
             <div class="form-group">
                 <label class="control-label">Lecturer</label>
-                <select class="form-control" name="LecturerId" asp-items="ViewBag.Lecturers" required ></select>
+                <select asp-for="LecturerId" class="form-control" name="LecturerId" asp-items="ViewBag.Lecturers" required></select>
             </div>
             <div class="form-group">
                 <label class="control-label">Subject</label>
-                <select class="form-control" name="SubjectId" asp-items="ViewBag.Subjects" required ></select>
+                <select asp-for="SubjectId" class="form-control" name="SubjectId" asp-items="ViewBag.Subjects" required></select>
             </div>
+            <input asp-for="SurveyId" type="hidden" value="@ViewBag.SurveyId"/>
 
         </div>
 
         <div class="col-md-8">
 
-            @foreach (var q in Model)
-            {               
+            @foreach (var q in ViewBag.Questions as IEnumerable<OSS.Models.SurveySystemModels.Question>)
+            {
                 <p>@q.Text</p>
-                @for(var i = 1; i <= 12; i++)
+                @for (var i = 1; i <= 12; i++)
                 {
-                    <input type="radio" name="@q.QuestionId" value="@i"/>
+                    <input name="@q.QuestionId" type="radio" value="@i" />
                 }
             }
-
-             <div class="form-group">
+            <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-default marginTop" />
             </div>
 
