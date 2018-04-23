@@ -37,28 +37,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Lecturer.LecturerId)
+                @Html.DisplayFor(modelItem => item.Lecturer.FirstName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Question.QuestionId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.QuestionAnswer.QuestionAnswerId)
+                @Html.DisplayFor(modelItem => item.QuestionAnswer.Score)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Student.StudentId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Subject.SubjectId)
+                @Html.DisplayFor(modelItem => item.Subject.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Survey.SurveyId)
+                @Html.DisplayFor(modelItem => item.Survey.Name)
             </td>
-            <td>
+            @*<td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
+            </td>*@
         </tr>
 }
     </tbody>

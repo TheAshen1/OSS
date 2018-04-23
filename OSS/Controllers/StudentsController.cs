@@ -22,6 +22,7 @@ namespace OSS.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
+
             var surveySystemDbContext = _context.Students.Include(s => s.Specialty);
             return View(await surveySystemDbContext.ToListAsync());
         }

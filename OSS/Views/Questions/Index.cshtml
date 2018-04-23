@@ -15,6 +15,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Text)
                 </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Survey)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -23,6 +26,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Survey.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.QuestionId">Edit</a> |

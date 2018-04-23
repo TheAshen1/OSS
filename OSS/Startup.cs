@@ -44,7 +44,7 @@ namespace OSS
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -56,7 +56,9 @@ namespace OSS
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            /**/
+            CreateRoles(serviceProvider);
+            /**/
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -67,6 +69,29 @@ namespace OSS
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+
+
+
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+
+            if(!UserManager.Users.Any())
+            {
+                var poweruser = new ApplicationUser
+                {
+                    UserName = "Admin",
+                    Email = "admin@email.com",
+                };
+                string adminPassword = "12345678";
+
+                 UserManager.CreateAsync(poweruser, adminPassword);
+            }
+
+           
         }
     }
 }

@@ -22,7 +22,8 @@ namespace OSS.Controllers
         // GET: Questions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Questions.ToListAsync());
+            var surveySystemDbContext = _context.Questions.Include(q => q.Survey);
+            return View(await surveySystemDbContext.ToListAsync());
         }
 
         // GET: Questions/Details/5
@@ -34,6 +35,7 @@ namespace OSS.Controllers
             }
 
             var question = await _context.Questions
+                .Include(q => q.Survey)
                 .SingleOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {
@@ -46,6 +48,7 @@ namespace OSS.Controllers
         // GET: Questions/Create
         public IActionResult Create()
         {
+            ViewData["SurveyId"] = new SelectList(_context.Surveys, "SurveyId", "Name");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("QuestionId,Text")] Question question)
+        public async Task<IActionResult> Create([Bind("QuestionId,Text,SurveyId")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace OSS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SurveyId"] = new SelectList(_context.Surveys, "SurveyId", "Name", question.SurveyId);
             return View(question);
         }
 
@@ -78,6 +82,7 @@ namespace OSS.Controllers
             {
                 return NotFound();
             }
+            ViewData["SurveyId"] = new SelectList(_context.Surveys, "SurveyId", "Name", question.SurveyId);
             return View(question);
         }
 
@@ -86,7 +91,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("QuestionId,Text")] Question question)
+        public async Task<IActionResult> Edit(int id, [Bind("QuestionId,Text,SurveyId")] Question question)
         {
             if (id != question.QuestionId)
             {
@@ -113,6 +118,7 @@ namespace OSS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SurveyId"] = new SelectList(_context.Surveys, "SurveyId", "Name", question.SurveyId);
             return View(question);
         }
 
@@ -125,6 +131,7 @@ namespace OSS.Controllers
             }
 
             var question = await _context.Questions
+                .Include(q => q.Survey)
                 .SingleOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {

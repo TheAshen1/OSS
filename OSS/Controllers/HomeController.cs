@@ -44,14 +44,14 @@ namespace OSS.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            //ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            //ViewData["Message"] = "Your contact page.";
 
             return View();
         }
@@ -86,6 +86,12 @@ namespace OSS.Controllers
             var questions = query.ToList();
             foreach (var q in questions)
             {
+                int S = 0;
+                if (!string.IsNullOrWhiteSpace(Request.Form[q.QuestionId.ToString()]))
+                {
+                    S = Int32.Parse(Request.Form[q.QuestionId.ToString()]);
+                }
+
                 answers.Add(
                     new Answer()
                     {
@@ -94,7 +100,7 @@ namespace OSS.Controllers
                         SubjectId = model.SubjectId,
                         SurveyId = model.SurveyId,
                         QuestionId = q.QuestionId,
-                        QuestionAnswer = new QuestionAnswer() {  Score = Int32.Parse( Request.Form[q.QuestionId.ToString()]) }                     
+                        QuestionAnswer = new QuestionAnswer() { Score = S  }                     
                     }
                 );
             }
