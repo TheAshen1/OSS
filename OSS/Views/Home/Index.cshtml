@@ -2,45 +2,49 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="row">
     <div class="jumbotron marginTop">
         <h2>Best lecturer survey</h2>
     </div>
 
 </div>
+@section scripts{
+    <script src="~/js/GetSpecialties.js"></script>
+    <script src="~/js/GetSubjects.js"></script>
+}
+
 <form asp-action="SurveySubmit" asp-controller="Home" asp-antiforgery="true">
     <div class="row">
         <div class="col-md-4">
 
             <div class="form-group">
                 <label class="control-label">Faculty</label>
-                <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.Faculties"></select>
+                <select asp-for="FacultyId" class="form-control" asp-items="Model.Faculties" required></select>
                 <span asp-validation-for="FacultyId"></span>
             </div>
 
             <div class="form-group">
                 <label class="control-label">Specialty</label>
-                <select asp-for="SpecialtyId" class="form-control" asp-items="ViewBag.Specialties" required></select>
+                <select asp-for="SpecialtyId" class="form-control" asp-items="Model.AvailableSpecialties" required></select>
                 <span asp-validation-for="SpecialtyId"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Gender</label>
-                <input asp-for="Gender" type="radio" value="Male" required />
-                <input asp-for="Gender" type="radio" value="Female" required />
+                <input asp-for="Gender" type="radio" value="Male" required />M
+                <input asp-for="Gender" type="radio" value="Female" required />F
                 <span asp-validation-for="Gender"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Lecturer</label>
-                <select asp-for="LecturerId" class="form-control" asp-items="ViewBag.Lecturers" required></select>
+                <select asp-for="LecturerId" class="form-control" asp-items="Model.Lecturers" required></select>
                 <span asp-validation-for="LecturerId"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Subject</label>
-                <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.Subjects" required></select>
+                <select asp-for="SubjectId" class="form-control" asp-items="Model.Subjects" required></select>
                 <span asp-validation-for="SubjectId"></span>
             </div>
-            <input asp-for="SurveyId" type="hidden" value="@ViewBag.SurveyId"/>
+            <input asp-for="SurveyId" type="hidden" value="@ViewBag.SurveyId" />
 
         </div>
 
@@ -51,7 +55,7 @@
                 <p>@q.Text</p>
                 @for (var i = 1; i <= 12; i++)
                 {
-                    <input name="@q.QuestionId" type="radio" value="@i" required/>
+                    <input name="@q.QuestionId" type="radio" value="@i" required />
                 }
             }
             <div class="form-group">

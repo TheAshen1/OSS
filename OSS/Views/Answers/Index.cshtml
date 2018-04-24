@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OSS.Models.SurveySystemModels.Answer>
+﻿@model PaginatedList<OSS.Models.SurveySystemModels.Answer>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,57 +9,83 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<ul class="horisontalList">
+    <li>
+        <p style="margin:10px;">@Model.PageIndex / @Model.TotalPages pages</p>
+    </li>
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex - 1)"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+    </li>
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex + 1)"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+    </li>
+</ul>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Lecturer)
+                @Html.DisplayNameFor(model => model.First().Lecturer)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Question)
+                @Html.DisplayNameFor(model => model.First().Question)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.QuestionAnswer)
+                @Html.DisplayNameFor(model => model.First().QuestionAnswer)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                @Html.DisplayNameFor(model => model.First().Student)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject)
+                @Html.DisplayNameFor(model => model.First().Subject)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Survey)
+                @Html.DisplayNameFor(model => model.First().Survey)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lecturer.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question.QuestionId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuestionAnswer.Score)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Survey.Name)
-            </td>
-            @*<td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>*@
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lecturer.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question.QuestionId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionAnswer.Score)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.StudentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Survey.Name)
+                </td>
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>*@
+            </tr>
+        }
     </tbody>
 </table>
+

@@ -29,9 +29,9 @@ namespace OSS.Controllers
         }
 
         // GET: LecturerSubjects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? Lid, int? Sid)
         {
-            if (id == null)
+            if (Lid == null || Sid == null)
             {
                 return NotFound();
             }
@@ -39,7 +39,7 @@ namespace OSS.Controllers
             var lecturerSubject = await _context.LecturerSubject
                 .Include(l => l.Lecturer)
                 .Include(l => l.Subject)
-                .SingleOrDefaultAsync(m => m.LecturerId == id);
+                .SingleOrDefaultAsync(m => m.LecturerId == Lid && m.SubjectId == Sid);
             if (lecturerSubject == null)
             {
                 return NotFound();
@@ -51,8 +51,8 @@ namespace OSS.Controllers
         // GET: LecturerSubjects/Create
         public IActionResult Create()
         {
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "LecturerId", "LecturerId");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectId");
+            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "LecturerId", "Name");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "FullName");
             return View();
         }
 
@@ -75,14 +75,14 @@ namespace OSS.Controllers
         }
 
         // GET: LecturerSubjects/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? Lid, int? Sid)
         {
-            if (id == null)
+            if (Lid == null || Sid == null)
             {
                 return NotFound();
             }
 
-            var lecturerSubject = await _context.LecturerSubject.SingleOrDefaultAsync(m => m.LecturerId == id);
+            var lecturerSubject = await _context.LecturerSubject.SingleOrDefaultAsync(m => m.LecturerId == Lid && m.SubjectId == Sid);
             if (lecturerSubject == null)
             {
                 return NotFound();
@@ -97,9 +97,9 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LecturerId,SubjectId")] LecturerSubject lecturerSubject)
+        public async Task<IActionResult> Edit(int Lid, int Sid, [Bind("LecturerId,SubjectId")] LecturerSubject lecturerSubject)
         {
-            if (id != lecturerSubject.LecturerId)
+            if (Lid != lecturerSubject.LecturerId || Sid != lecturerSubject.SubjectId)
             {
                 return NotFound();
             }
@@ -124,8 +124,8 @@ namespace OSS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "LecturerId", "LecturerId", lecturerSubject.LecturerId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectId", lecturerSubject.SubjectId);
+            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "LecturerId", "FirstName", lecturerSubject.LecturerId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "FullName", lecturerSubject.SubjectId);
             return View(lecturerSubject);
         }
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using OSS.Models.SurveySystemModels;
 
 namespace OSS.Controllers
 {
-    [Authorize]
     public class SpecialtiesController : Controller
     {
         private readonly SurveySystemDbContext _context;
@@ -24,7 +22,8 @@ namespace OSS.Controllers
         // GET: Specialties
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Specialties.ToListAsync());
+            var surveySystemDbContext = _context.Specialties.Include(s => s.Faculty);
+            return View(await surveySystemDbContext.ToListAsync());
         }
 
         // GET: Specialties/Details/5
@@ -36,6 +35,7 @@ namespace OSS.Controllers
             }
 
             var specialty = await _context.Specialties
+                .Include(s => s.Faculty)
                 .SingleOrDefaultAsync(m => m.SpecialtyId == id);
             if (specialty == null)
             {
@@ -48,6 +48,7 @@ namespace OSS.Controllers
         // GET: Specialties/Create
         public IActionResult Create()
         {
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
             return View();
         }
 
@@ -56,7 +57,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SpecialtyId,SpecialtyCode,FullName")] Specialty specialty)
+        public async Task<IActionResult> Create([Bind("SpecialtyId,SpecialtyCode,FullName,FacultyId")] Specialty specialty)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +65,7 @@ namespace OSS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName", specialty.FacultyId);
             return View(specialty);
         }
 
@@ -80,6 +82,7 @@ namespace OSS.Controllers
             {
                 return NotFound();
             }
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName", specialty.FacultyId);
             return View(specialty);
         }
 
@@ -88,7 +91,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SpecialtyId,SpecialtyCode,FullName")] Specialty specialty)
+        public async Task<IActionResult> Edit(int id, [Bind("SpecialtyId,SpecialtyCode,FullName,FacultyId")] Specialty specialty)
         {
             if (id != specialty.SpecialtyId)
             {
@@ -115,6 +118,7 @@ namespace OSS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName", specialty.FacultyId);
             return View(specialty);
         }
 
@@ -127,6 +131,7 @@ namespace OSS.Controllers
             }
 
             var specialty = await _context.Specialties
+                .Include(s => s.Faculty)
                 .SingleOrDefaultAsync(m => m.SpecialtyId == id);
             if (specialty == null)
             {

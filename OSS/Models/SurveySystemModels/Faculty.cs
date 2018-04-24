@@ -12,7 +12,6 @@ namespace OSS.Models.SurveySystemModels
         public string FullName { get; set; }
 
         public List<Specialty> Specialties { get; set; }
-        //public List<Student> Students { get; set; }
 
     }
 }

@@ -34,14 +34,13 @@
     }
 }
 
-.marginTop {
-    margin-top: 10px;
+.horisontalList {
+    display: inline;
+    list-style-type: none;
 }
 
-.marginBot {
-    margin-bottom: 10px;
-}
-
-.paddingTop{
-    padding-top: 10px;
-}
+    .horisontalList > li {
+        display: block;
+        float: left;
+        margin: 0 5px 0 0;
+    }

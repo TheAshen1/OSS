@@ -22,10 +22,13 @@ namespace OSS.Controllers
         }
 
         // GET: Answers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+            int pageSize = 10;
+
             var surveySystemDbContext = _context.Answers.Include(a => a.Lecturer).Include(a => a.Question).Include(a => a.QuestionAnswer).Include(a => a.Student).Include(a => a.Subject).Include(a => a.Survey);
-            return View(await surveySystemDbContext.ToListAsync());
+            //return View(await surveySystemDbContext.ToListAsync());
+            return View(await PaginatedList<Answer>.CreateAsync(surveySystemDbContext.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Answers/Details/5
