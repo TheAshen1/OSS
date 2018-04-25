@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<div class="row">
+<div class="row" style="margin-top:10px;">
     <div class="jumbotron marginTop">
         <h2>Best lecturer survey</h2>
     </div>
@@ -55,7 +55,10 @@
                 <p>@q.Text</p>
                 @for (var i = 1; i <= 12; i++)
                 {
-                    <input name="@q.QuestionId" type="radio" value="@i" required />
+                    <div style="display:inline-block; margin-right:2px;">
+                        @i <br/>
+                        <input name="@q.QuestionId" type="radio" value="@i" required />
+                    </div>
                 }
             }
             <div class="form-group">

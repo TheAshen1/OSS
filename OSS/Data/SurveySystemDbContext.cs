@@ -37,12 +37,12 @@ namespace OSS.Data
             modelBuilder.Entity<LecturerSubject>()
                 .HasOne(ls => ls.Lecturer)
                 .WithMany(l => l.LecturerSubjects)
-                .HasForeignKey(ls => ls.LecturerId);
+                .HasForeignKey(ls => ls.LecturerId).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<LecturerSubject>()
                 .HasOne(ls => ls.Subject)
                 .WithMany(s => s.SubjectLecturers)
-                .HasForeignKey(ls => ls.SubjectId);
+                .HasForeignKey(ls => ls.SubjectId).OnDelete(DeleteBehavior.Restrict);
 
 
             //do not cascade when Specialty is deleted

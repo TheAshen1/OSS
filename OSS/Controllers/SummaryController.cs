@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using OSS.Data;
 using OSS.Models.SurveySystemModels;
 
@@ -19,12 +21,30 @@ namespace OSS.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public ActionResult Index()
         {
-            //var query = from a in _context.Answers
-            //            join l in _context.Lecturers on a.LecturerId equals l.LecturerId
+            //var surveySystemDbContext = _context.Answers
+            //    .Include(a => a.Lecturer)
+            //    .Include(a => a.Question)
+            //    .Include(a => a.QuestionAnswer)
+            //    .Include(a => a.Student)
+            //    .Include(a => a.Subject)
+            //    .Include(a => a.Survey);
 
-            return View();
+            var teacherAvg = from a in _context.Answers
+                             group a by a.Lecturer into g
+                             select new SummaryViewModel
+                             {
+                                 Lecturer = g.Key,
+                                 Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                             };
+
+            //var model = new SummaryViewModel
+            //{
+            //    Lecturers = _context.Lecturers,
+            //    Avg = teacherAvg
+            //};
+            return View(teacherAvg.OrderByDescending(a => a.Avg));
         }
     }
 }

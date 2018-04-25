@@ -120,18 +120,27 @@ namespace OSS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SurveySubmit(ViewModel model)
         {
+            string ip = String.Empty ; 
+            /*Get user IP adress and check it*/
+            string ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            if (!string.IsNullOrEmpty(ipAddress)) {
+                ip = ipAddress;
+
+                if( _context.Students.Where( s => s.StudentIP == ip).Any())
+                {
+                    return View("SubmitDenied");
+                }
+                            
+            }
+            /**/
+
 
             var student = new Student()
             {
                 Gender = model.Gender,
-                SpecialtyId = model.SpecialtyId
+                SpecialtyId = model.SpecialtyId,
+                StudentIP = ip
             };
-
-            /*Get user IP adress*/
-            string ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            if (!string.IsNullOrEmpty(ipAddress)) student.StudentIP = ipAddress;
-            /**/
-
 
             var answers = new List<Answer>();
 

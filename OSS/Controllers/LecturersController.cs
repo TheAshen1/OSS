@@ -24,7 +24,11 @@ namespace OSS.Controllers
         // GET: Lecturers
         public async Task<IActionResult> Index()
         {
+            var model = new LecturerViewModel();
+            model.Lecturers = _context.Lecturers.AsEnumerable();
+
             return View(await _context.Lecturers.ToListAsync());
+            //return View(model);
         }
 
         // GET: Lecturers/Details/5

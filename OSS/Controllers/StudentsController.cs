@@ -20,11 +20,13 @@ namespace OSS.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+            int pageSize = 10;
 
             var surveySystemDbContext = _context.Students.Include(s => s.Specialty);
-            return View(await surveySystemDbContext.ToListAsync());
+            //return View(await surveySystemDbContext.ToListAsync());
+            return View(await PaginatedList<Student>.CreateAsync(surveySystemDbContext.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Students/Details/5

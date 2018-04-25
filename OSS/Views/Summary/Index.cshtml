@@ -1,14 +1,52 @@
-﻿
+﻿@model IEnumerable<OSS.Models.SurveySystemModels.SummaryViewModel>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
+<div class="row" style="margin-top:10px;">
     <div class="jumbotron marginTop">
         <h2>Best lecturer survey results</h2>
     </div>
 
 
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @*<label asp-for="Lecturer.FirstName"></label>*@
+                    @Html.DisplayNameFor(model => model.Lecturer.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Lecturer.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Lecturer.MiddleName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Avg)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lecturer.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lecturer.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lecturer.MiddleName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Avg)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 

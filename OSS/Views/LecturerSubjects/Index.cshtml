@@ -31,10 +31,7 @@
                 @Html.DisplayFor(modelItem => item.Subject.FullName)
             </td>
             <td>
-                <a asp-controller="LecturerSubjects" asp-action="Edit" asp-route-Lid="@item.LecturerId" asp-route-Sid="@item.SubjectId">Edit</a> |
-                @*@Html.ActionLink("Edit", "LecturerSubjects", new { Lid = item.LecturerId, Sid = item.SubjectId }) |*@
-                @Html.ActionLink("Details", "LecturerSubjects", new { Lid = item.LecturerId, Sid = item.SubjectId }) |
-                @Html.ActionLink("Delete", "LecturerSubjects", new { /* id=item.PrimaryKey */ })
+                <a asp-controller="LecturerSubjects" asp-action="Delete" asp-route-Lid="@item.LecturerId" asp-route-Sid="@item.SubjectId">Delete</a> 
             </td>
         </tr>
 }
