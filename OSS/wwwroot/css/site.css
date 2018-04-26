@@ -34,6 +34,10 @@
     }
 }
 
+.marginTop {
+    margin-top:10px;
+}
+
 .horisontalList {
     display: inline;
     list-style-type: none;

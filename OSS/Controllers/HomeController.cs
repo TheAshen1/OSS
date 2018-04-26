@@ -120,27 +120,33 @@ namespace OSS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SurveySubmit(ViewModel model)
         {
+            Student student = null;
             string ip = String.Empty ; 
-            /*Get user IP adress and check it*/
+            /*Get user IP adress and check if he has already sumbitted for this Lecturer and Subject*/
             string ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             if (!string.IsNullOrEmpty(ipAddress)) {
                 ip = ipAddress;
+                var stud = _context.Students.Where(s => s.StudentIP == ip).FirstOrDefault();
 
-                if( _context.Students.Where( s => s.StudentIP == ip).Any())
+                if (stud != null)
                 {
-                    return View("SubmitDenied");
+                    student = stud;
+                    if (_context.Answers.Where(a => a.StudentId == student.StudentId && a.LecturerId == model.LecturerId && a.SubjectId == model.SubjectId).Any())
+                    {
+                        return View("SubmitDenied");
+                    }
                 }
                             
             }
             /**/
 
-
-            var student = new Student()
-            {
-                Gender = model.Gender,
-                SpecialtyId = model.SpecialtyId,
-                StudentIP = ip
-            };
+            if(student == null)
+                student = new Student()
+                {
+                    Gender = model.Gender,
+                    SpecialtyId = model.SpecialtyId,
+                    StudentIP = ip
+                };
 
             var answers = new List<Answer>();
 
