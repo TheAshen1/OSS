@@ -37,12 +37,12 @@ namespace OSS.Data
             modelBuilder.Entity<LecturerSubject>()
                 .HasOne(ls => ls.Lecturer)
                 .WithMany(l => l.LecturerSubjects)
-                .HasForeignKey(ls => ls.LecturerId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(ls => ls.LecturerId);
 
             modelBuilder.Entity<LecturerSubject>()
                 .HasOne(ls => ls.Subject)
                 .WithMany(s => s.SubjectLecturers)
-                .HasForeignKey(ls => ls.SubjectId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(ls => ls.SubjectId);
 
 
             //do not cascade when Specialty is deleted
@@ -50,11 +50,16 @@ namespace OSS.Data
                 .HasOne(s=>s.Specialty)
                 .WithMany(s => s.Students)
                 .OnDelete(DeleteBehavior.SetNull);
+
             //do not cascade when Survey is deleted
             modelBuilder.Entity<Answer>()
                 .HasOne(a => a.Survey)
                 .WithMany(s => s.Answers)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Lecturer>()
+                .Property(l => l.Initials)
+                .HasComputedColumnSql("SUBSTRING(FirstName,1,1) + '.' + SUBSTRING(MiddleName,1,1) + '. ' + [LastName]");
             //many-to-many
             // composite PK
             //modelBuilder.Entity<SurveyQuestion>()

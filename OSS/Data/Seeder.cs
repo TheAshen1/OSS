@@ -72,14 +72,17 @@ namespace OSS.Data
 
             if (!context.Lecturers.Any() && !context.Subjects.Any())
             {
+
+                var EIid = context.Faculties.Where(f => f.ShortName == "ЭИ").Select(f => f.FacultyId).SingleOrDefault();
+                var EPid = context.Faculties.Where(f => f.ShortName == "ЭП").Select(f => f.FacultyId).SingleOrDefault();
                 var lecturers = new[]
                 {
-                    new Lecturer() { FirstName = "Иван" },
-                    new Lecturer() { FirstName = "Николай" },
-                    new Lecturer() { FirstName = "Алексей" },
-                    new Lecturer() { FirstName = "Анна" },
-                    new Lecturer() { FirstName = "Светлана" },
-                    new Lecturer() { FirstName = "Татьяна" }
+                    new Lecturer() { FirstName = "Иван", LastName = "Иванов" ,MiddleName = "Иванович" ,FacultyId = EIid},
+                    new Lecturer() { FirstName = "Николай", LastName = "Немцов" ,MiddleName = "Сергеевич" ,FacultyId = EIid},
+                    new Lecturer() { FirstName = "Алексей", LastName = "Петров" ,MiddleName = "Юрьевич",FacultyId = EIid },
+                    new Lecturer() { FirstName = "Наталья", LastName = "Суханова" ,MiddleName = "Фёдоровна" ,FacultyId = EIid},
+                    new Lecturer() { FirstName = "Юлия", LastName = "Беспалова" ,MiddleName = "Филипповна",FacultyId = EIid },
+                    new Lecturer() { FirstName = "Евгения", LastName = "Максимова" ,MiddleName = "Филипповна",FacultyId = EPid }
                 };
 
                 var subjects = new[]

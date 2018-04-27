@@ -37,9 +37,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.First().StudentIP)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.First().Gender)
             </th>
             <th>
@@ -53,17 +50,14 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StudentIP)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Gender)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Specialty.SpecialtyId)
+                    @Html.DisplayFor(modelItem => item.Specialty.FullName)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.StudentId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> |
+                    @*<a asp-action="Details" asp-route-id="@item.StudentId">Details</a> |*@
                     <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
                 </td>
             </tr>

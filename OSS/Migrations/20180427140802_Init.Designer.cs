@@ -11,7 +11,7 @@ using System;
 namespace OSS.Migrations
 {
     [DbContext(typeof(SurveySystemDbContext))]
-    [Migration("20180420084324_Init")]
+    [Migration("20180427140802_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,13 @@ namespace OSS.Migrations
                     b.Property<int>("LecturerId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("FacultyId");
+
                     b.Property<string>("FirstName");
+
+                    b.Property<string>("Initials")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("SUBSTRING(FirstName,1,1) + '.' + SUBSTRING(MiddleName,1,1) + '. ' + [LastName]");
 
                     b.Property<string>("LastName");
 
@@ -79,6 +85,8 @@ namespace OSS.Migrations
                     b.Property<byte[]>("Photo");
 
                     b.HasKey("LecturerId");
+
+                    b.HasIndex("FacultyId");
 
                     b.ToTable("Lecturers");
                 });
@@ -151,7 +159,7 @@ namespace OSS.Migrations
 
                     b.Property<int>("SpecialtyId");
 
-                    b.Property<string>("StudentIP");
+                    b.Property<int>("Year");
 
                     b.HasKey("StudentId");
 
@@ -223,6 +231,14 @@ namespace OSS.Migrations
                         .WithMany("Answers")
                         .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("OSS.Models.SurveySystemModels.Lecturer", b =>
+                {
+                    b.HasOne("OSS.Models.SurveySystemModels.Faculty", "Faculty")
+                        .WithMany()
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("OSS.Models.SurveySystemModels.LecturerSubject", b =>
