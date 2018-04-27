@@ -24,6 +24,22 @@ namespace OSS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Lecturers",
+                columns: table => new
+                {
+                    LecturerId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    MiddleName = table.Column<string>(nullable: true),
+                    Photo = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lecturers", x => x.LecturerId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "QuestionAnswer",
                 columns: table => new
                 {
@@ -67,30 +83,6 @@ namespace OSS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Lecturers",
-                columns: table => new
-                {
-                    LecturerId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FacultyId = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    Initials = table.Column<string>(nullable: true, computedColumnSql: "SUBSTRING(FirstName,1,1) + '.' + SUBSTRING(MiddleName,1,1) + '. ' + [LastName]"),
-                    LastName = table.Column<string>(nullable: true),
-                    MiddleName = table.Column<string>(nullable: true),
-                    Photo = table.Column<byte[]>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Lecturers", x => x.LecturerId);
-                    table.ForeignKey(
-                        name: "FK_Lecturers_Faculties_FacultyId",
-                        column: x => x.FacultyId,
-                        principalTable: "Faculties",
-                        principalColumn: "FacultyId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Specialties",
                 columns: table => new
                 {
@@ -108,26 +100,6 @@ namespace OSS.Migrations
                         column: x => x.FacultyId,
                         principalTable: "Faculties",
                         principalColumn: "FacultyId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Questions",
-                columns: table => new
-                {
-                    QuestionId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    SurveyId = table.Column<int>(nullable: false),
-                    Text = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
-                    table.ForeignKey(
-                        name: "FK_Questions_Surveys_SurveyId",
-                        column: x => x.SurveyId,
-                        principalTable: "Surveys",
-                        principalColumn: "SurveyId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -156,14 +128,34 @@ namespace OSS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    QuestionId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SurveyId = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
+                    table.ForeignKey(
+                        name: "FK_Questions_Surveys_SurveyId",
+                        column: x => x.SurveyId,
+                        principalTable: "Surveys",
+                        principalColumn: "SurveyId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
                     StudentId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Gender = table.Column<string>(nullable: true),
-                    SpecialtyId = table.Column<int>(nullable: false),
-                    Year = table.Column<int>(nullable: false)
+                    SpecialtyId = table.Column<int>(nullable: true),
+                    StudentIP = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -253,11 +245,6 @@ namespace OSS.Migrations
                 name: "IX_Answers_SurveyId",
                 table: "Answers",
                 column: "SurveyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Lecturers_FacultyId",
-                table: "Lecturers",
-                column: "FacultyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LecturerSubject_SubjectId",

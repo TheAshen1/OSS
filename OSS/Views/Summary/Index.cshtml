@@ -14,13 +14,10 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Lecturer.FirstName)
+                    @Html.DisplayNameFor(model => model.Lecturer.Initials)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Lecturer.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Lecturer.MiddleName)
+                    @Html.DisplayNameFor(model => model.Lecturer.Faculty)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Avg)
@@ -30,20 +27,20 @@
         <tbody>
             @foreach(var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Lecturer.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Lecturer.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Lecturer.MiddleName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Avg)
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lecturer.Initials)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lecturer.Faculty.ShortName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Avg)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Lecturer.LecturerId">Details</a> 
+                </td>
+            </tr>
             }
         </tbody>
     </table>

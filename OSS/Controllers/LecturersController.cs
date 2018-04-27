@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using OSS.Models.SurveySystemModels;
 
 namespace OSS.Controllers
 {
-    [Authorize]
     public class LecturersController : Controller
     {
         private readonly SurveySystemDbContext _context;
@@ -24,11 +22,8 @@ namespace OSS.Controllers
         // GET: Lecturers
         public async Task<IActionResult> Index()
         {
-            var model = new LecturerViewModel();
-            model.Lecturers = _context.Lecturers.AsEnumerable();
-
-            return View(await _context.Lecturers.ToListAsync());
-            //return View(model);
+            var surveySystemDbContext = _context.Lecturers.Include(l => l.Faculty);
+            return View(await surveySystemDbContext.ToListAsync());
         }
 
         // GET: Lecturers/Details/5
@@ -40,6 +35,7 @@ namespace OSS.Controllers
             }
 
             var lecturer = await _context.Lecturers
+                .Include(l => l.Faculty)
                 .SingleOrDefaultAsync(m => m.LecturerId == id);
             if (lecturer == null)
             {
@@ -52,6 +48,7 @@ namespace OSS.Controllers
         // GET: Lecturers/Create
         public IActionResult Create()
         {
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
             return View();
         }
 
@@ -60,7 +57,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LecturerId,FirstName,LastName,MiddleName,Photo")] Lecturer lecturer)
+        public async Task<IActionResult> Create([Bind("LecturerId,FirstName,LastName,MiddleName,Initials,Photo,FacultyId")] Lecturer lecturer)
         {
             if (ModelState.IsValid)
             {
@@ -68,6 +65,7 @@ namespace OSS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName", lecturer.FacultyId);
             return View(lecturer);
         }
 
@@ -84,6 +82,7 @@ namespace OSS.Controllers
             {
                 return NotFound();
             }
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName", lecturer.FacultyId);
             return View(lecturer);
         }
 
@@ -92,7 +91,7 @@ namespace OSS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LecturerId,FirstName,LastName,MiddleName,Photo")] Lecturer lecturer)
+        public async Task<IActionResult> Edit(int id, [Bind("LecturerId,FirstName,LastName,MiddleName,Initials,Photo,FacultyId")] Lecturer lecturer)
         {
             if (id != lecturer.LecturerId)
             {
@@ -119,6 +118,7 @@ namespace OSS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "ShortName", lecturer.FacultyId);
             return View(lecturer);
         }
 
@@ -131,6 +131,7 @@ namespace OSS.Controllers
             }
 
             var lecturer = await _context.Lecturers
+                .Include(l => l.Faculty)
                 .SingleOrDefaultAsync(m => m.LecturerId == id);
             if (lecturer == null)
             {

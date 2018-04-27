@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Index</h2>
@@ -12,18 +13,25 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MiddleName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Photo)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Initials)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Faculty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Photo)
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -40,11 +48,17 @@
                 @Html.DisplayFor(modelItem => item.MiddleName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Photo)
+                @Html.DisplayFor(modelItem => item.Initials)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Faculty.ShortName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.LecturerId">Edit</a> |
-                @*<a asp-action="Details" asp-route-id="@item.LecturerId">Details</a> |*@
                 <a asp-action="Delete" asp-route-id="@item.LecturerId">Delete</a>
             </td>
         </tr>

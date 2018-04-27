@@ -57,7 +57,7 @@ namespace OSS
                 app.UseExceptionHandler("/Home/Error");
             }
             /**/
-            CreateRoles(serviceProvider);
+            CreateRoles(serviceProvider).Wait();
             /**/
             app.UseStaticFiles();
 
@@ -74,24 +74,82 @@ namespace OSS
 
 
 
-        private void CreateRoles(IServiceProvider serviceProvider)
+        private async Task CreateRoles(IServiceProvider serviceProvider)
         {
+            //if(!UserManager.Users.Any())
+            //{
+            //    var poweruser = new ApplicationUser
+            //    {
+            //        UserName = "Admin",
+            //        Email = "admin@email.com",
+            //    };
+            //    string adminPassword = "12345678";
+
+            //     UserManager.CreateAsync(poweruser, adminPassword);
+            //}
+
+            //initializing custom roles 
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roleNames = { "Admin","EP","EI","MIM","MEV","KIMB","FIN","FSF"};
+            IdentityResult roleResult;
 
-
-            if(!UserManager.Users.Any())
+            foreach (var roleName in roleNames)
             {
-                var poweruser = new ApplicationUser
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
                 {
-                    UserName = "Admin",
-                    Email = "admin@email.com",
-                };
-                string adminPassword = "12345678";
-
-                 UserManager.CreateAsync(poweruser, adminPassword);
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
             }
 
-           
+            //Here you could create a super user who will maintain the web app
+            //var poweruser = new ApplicationUser
+            //{
+
+            //    UserName = Configuration["AppSettings:AdminUserEmail"],
+            //    Email = Configuration["AppSettings:AdminUserEmail"],
+            //};
+            foreach (var role in roleNames) {
+                var user = new ApplicationUser
+                {
+
+                    UserName = Configuration["AppSettings:" + role + "UserEmail"],
+                    Email = Configuration["AppSettings:" + role + "UserEmail"],
+                };
+                var userPWD = Configuration["AppSettings:" + role + "UserPassword"];
+
+                var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:" + role + "UserEmail"]);
+
+                if (_user == null)
+                {
+                    var createPowerUser = await UserManager.CreateAsync(user, userPWD);
+                    if (createPowerUser.Succeeded)
+                    {
+                        //here we tie the new user to the role
+                        await UserManager.AddToRoleAsync(user, role);
+
+                    }
+                }
+            }
+
+            //Ensure you have these values in your appsettings.json file
+            //string userPWD = Configuration["AppSettings:AdminUserPassword"];
+            //var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
+
+            //if (_user == null)
+            //{
+            //    var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
+            //    if (createPowerUser.Succeeded)
+            //    {
+            //        //here we tie the new user to the role
+            //        await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+            //    }
+            //}
+
+
+
         }
     }
 }

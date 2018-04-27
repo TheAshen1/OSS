@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OSS</title>
 
+
+    @inject SignInManager<ApplicationUser> SignInManager
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -33,29 +36,73 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-
-                    @inject SignInManager<ApplicationUser> SignInManager
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (User.IsInRole("EP"))
                     {
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            Tables
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-controller="Summary" asp-action="Index">Summary</a></li>
+                        <li><a asp-controller="Summary" asp-action="EP">EP Summary</a></li>
+                    }
+                    @if (User.IsInRole("EI"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="EI">EI Summary</a></li>
+                    }
+                    @if (User.IsInRole("MIM"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="MIM">MIM Summary</a></li>
+                    }
+                    @if (User.IsInRole("MEV"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="MEV">MEV Summary</a></li>
+                    }
+                    @if (User.IsInRole("KIMB"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="KIMB">KIMB Summary</a></li>
+                    }
+                    @if (User.IsInRole("FIN"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="FIN">FIN Summary</a></li>
+                    }
+                    @if (User.IsInRole("FSF"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="FSF">FSF Summary</a></li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a asp-controller="Summary" asp-action="Index">Summary</a></li>
+                        @*}
 
-                            <li><a asp-controller="Answers" asp-action="Index">Answers</a></li>
-                            <li><a asp-controller="Surveys" asp-action="Index">Surveys</a></li>
-                            <li><a asp-controller="Questions" asp-action="Index">Questions</a></li>
-                            <li><a asp-controller="Lecturers" asp-action="Index">Lecturers</a></li>
-                            <li><a asp-controller="Subjects" asp-action="Index">Subjects</a></li>
-                            <li><a asp-controller="LecturerSubjects" asp-action="Index">LecturerSubjects</a></li>
-                            <li><a asp-controller="Faculties" asp-action="Index">Faculties</a></li>
-                            <li><a asp-controller="Specialties" asp-action="Index">Specialties</a></li>
-                            <li><a asp-controller="Students" asp-action="Index">Voted Students</a></li>
-                        </ul>
-                    </li>
+                            @if (SignInManager.IsSignedIn(User))
+                            {*@
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Summaries by Faculty
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Summary" asp-action="EP">EP Summary</a></li>
+                                <li><a asp-controller="Summary" asp-action="EI">EI Summary</a></li>
+                                <li><a asp-controller="Summary" asp-action="MIM">MIM Summary</a></li>
+                                <li><a asp-controller="Summary" asp-action="MEV">MEV Summary</a></li>
+                                <li><a asp-controller="Summary" asp-action="KIMB">KIMB Summary</a></li>
+                                <li><a asp-controller="Summary" asp-action="FIN">FIN Summary</a></li>
+                                <li><a asp-controller="Summary" asp-action="FSF">FSF Summary</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Tables
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Answers" asp-action="Index">Answers</a></li>
+                                <li><a asp-controller="Surveys" asp-action="Index">Surveys</a></li>
+                                <li><a asp-controller="Questions" asp-action="Index">Questions</a></li>
+                                <li><a asp-controller="Lecturers" asp-action="Index">Lecturers</a></li>
+                                <li><a asp-controller="Subjects" asp-action="Index">Subjects</a></li>
+                                <li><a asp-controller="LecturerSubjects" asp-action="Index">LecturerSubjects</a></li>
+                                <li><a asp-controller="Faculties" asp-action="Index">Faculties</a></li>
+                                <li><a asp-controller="Specialties" asp-action="Index">Specialties</a></li>
+                                <li><a asp-controller="Students" asp-action="Index">Voted Students</a></li>
+                            </ul>
+                        </li>
                     }
 
 

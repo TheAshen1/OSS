@@ -79,6 +79,7 @@ namespace OSS.Data
             modelBuilder.Entity<Answer>()
                 .HasKey(t => new { t.StudentId, t.SurveyId, t.QuestionId, t.LecturerId, t.SubjectId});
 
+
         }
 
         public DbSet<OSS.Models.SurveySystemModels.LecturerSubject> LecturerSubject { get; set; }

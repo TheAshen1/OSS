@@ -58,6 +58,34 @@ namespace OSS.Controllers
                 }
             };
 
+            var Years = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Value = "1",
+                    Text = "1"
+                },
+                new SelectListItem
+                {
+                    Value = "2",
+                    Text = "2"
+                },
+                new SelectListItem
+                {
+                    Value = "3",
+                    Text = "3"
+                },
+                new SelectListItem
+                {
+                    Value = "4",
+                    Text = "4"
+                },
+                new SelectListItem
+                {
+                    Value = "5",
+                    Text = "5"
+                }
+            };
 
             var facultytip = new SelectListItem()
             {
@@ -69,19 +97,27 @@ namespace OSS.Controllers
                 Value = null,
                 Text = "--- select lecturer ---"
             };
+            var yeartip = new SelectListItem()
+            {
+                Value = null,
+                Text = "--- select year ---"
+            };
 
             List<SelectListItem> FacList = Faculties.ToList();
             List<SelectListItem> LecList = Lecturers.ToList();
             FacList.Insert(0, facultytip);
             LecList.Insert(0, lecturertip);
+            Years.Insert(0, yeartip);
 
             model.Faculties = new SelectList(FacList, "Value", "Text");
             model.Lecturers = new SelectList(LecList, "Value", "Text");
+            model.Years = new SelectList(Years, "Value", "Text");
 
-            //ViewData["Faculties"] = new SelectList(_context.Faculties, "FacultyId", "ShortName");
-            //ViewData["Specialties"] = new SelectList(_context.Specialties, "SpecialtyId", "FullName");
-            ViewData["Lecturers"] = new SelectList(_context.Lecturers, "LecturerId", "FirstName");
-            ViewData["Subjects"] = new SelectList(_context.Subjects, "SubjectId", "FullName");
+
+            //ViewData["Lecturers"] = new SelectList(_context.Lecturers, "LecturerId", "Initials");
+            //ViewData["Subjects"] = new SelectList(_context.Subjects, "SubjectId", "FullName");
+
+            model.Years = new SelectList(new[] { 1, 2, 3, 4, 5 });
 
             var id = _context.Surveys.Where(s => s.Name == "Best lecturer").FirstOrDefault().SurveyId;
 

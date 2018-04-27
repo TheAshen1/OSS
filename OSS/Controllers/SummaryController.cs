@@ -21,30 +21,186 @@ namespace OSS.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
-            //var surveySystemDbContext = _context.Answers
-            //    .Include(a => a.Lecturer)
-            //    .Include(a => a.Question)
-            //    .Include(a => a.QuestionAnswer)
-            //    .Include(a => a.Student)
-            //    .Include(a => a.Subject)
-            //    .Include(a => a.Survey);
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty);
 
-            var teacherAvg = from a in _context.Answers
-                             group a by a.Lecturer into g
-                             select new SummaryViewModel
-                             {
-                                 Lecturer = g.Key,
-                                 Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
-                             };
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key, Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
 
-            //var model = new SummaryViewModel
-            //{
-            //    Lecturers = _context.Lecturers,
-            //    Avg = teacherAvg
-            //};
-            return View(teacherAvg.OrderByDescending(a => a.Avg));
+            return View(lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Details(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, EP")]
+        public ActionResult EP()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "ЭП").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index",lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, EP")]
+        public ActionResult EPDetails(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, EI")]
+        public ActionResult EI()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "ЭИ").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index", lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, EI")]
+        public ActionResult EIDetails(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, MIM")]
+        public ActionResult MIM()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "МИМ").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index", lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, MIM")]
+        public ActionResult MIMDetails(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, MEV")]
+        public ActionResult MEV()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "МЭО").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index", lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, MEV")]
+        public ActionResult MEVDetails(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, KIMB")]
+        public ActionResult KIMB()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "КИМБ").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index", lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, KIMB")]
+        public ActionResult KIMBDetails(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, FIN")]
+        public ActionResult FIN()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "ФФ").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index", lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, FIN")]
+        public ActionResult FINDetails(int? lecturerId)
+        {
+            return View();
+        }
+        /**/
+        [Authorize(Roles = "Admin, FSF")]
+        public ActionResult FSF()
+        {
+            var fId = _context.Faculties.Where(f => f.ShortName == "ФСФ").SingleOrDefault().FacultyId;
+            var data = _context.Answers.Include(a => a.Lecturer).Include(a => a.Lecturer.Faculty).Where(a => a.Lecturer.FacultyId == fId);
+
+            var lecturerAvg = data.GroupBy(a => a.Lecturer,
+                    (key, g) => new SummaryViewModel
+                    {
+                        Lecturer = key,
+                        Avg = (decimal)g.Average(a => a.QuestionAnswer.Score)
+                    }
+                );
+
+            return View("Index", lecturerAvg.OrderByDescending(a => a.Avg));
+        }
+
+        [Authorize(Roles = "Admin, FSF")]
+        public ActionResult FSFDetails(int? lecturerId)
+        {
+            return View();
         }
     }
 }
