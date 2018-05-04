@@ -1,0 +1,41 @@
+﻿@model IEnumerable<OSS.Models.SurveySystemViewModels.VotingStatistics>
+@{
+    ViewData["Title"] = "VotingStatistic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" style="margin-top:10px;">
+    <div class="jumbotron marginTop">
+        <h2>Voting statistics</h2>
+    </div>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Faculty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Count)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Faculty.ShortName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                    <td>
+                        <a asp-action="VotingStatisticsDetails" asp-route-id="@item.Faculty.FacultyId">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
