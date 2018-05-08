@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Localization;
 using OSS.Data;
 using OSS.Models;
 using OSS.Models.SurveySystemModels;
@@ -16,15 +19,18 @@ namespace OSS.Controllers
     public class HomeController : Controller
     {
         private readonly SurveySystemDbContext _context;
+        private readonly IStringLocalizer<HomeController> _localizer;
 
-        public HomeController(SurveySystemDbContext context)
+        public HomeController(SurveySystemDbContext context, IStringLocalizer<HomeController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
         {
-            var model = new ViewModel();
+
+            var model = new SurveyViewModel();
 
             var Faculties = from f in _context.Faculties
                             select new SelectListItem
@@ -154,7 +160,7 @@ namespace OSS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SurveySubmit(ViewModel model)
+        public IActionResult Index(SurveyViewModel model)
         {
             //Student student = null;
             //string ip = String.Empty ; 
@@ -176,47 +182,148 @@ namespace OSS.Controllers
             //}
             ///**/
 
-
-            var student = new Student()
+            if (ModelState.IsValid)
             {
-                Gender = model.Gender,
-                SpecialtyId = model.SpecialtyId,
-                Year = model.Year
+
+                var student = new Student()
+                {
+                    Gender = model.Gender,
+                    SpecialtyId = model.SpecialtyId.Value,
+                    Year = model.Year.Value
+                };
+
+                var answers = new List<Answer>();
+
+                var query = _context.Questions
+                   .Where(q => q.SurveyId == model.SurveyId);
+
+                var questions = query.ToList();
+                foreach (var q in questions)
+                {
+                    int S = 0;
+                    if (!string.IsNullOrWhiteSpace(Request.Form[q.QuestionId.ToString()]))
+                    {
+                        S = Int32.Parse(Request.Form[q.QuestionId.ToString()]);
+                    }
+
+                    answers.Add(
+                        new Answer()
+                        {
+                            Student = student,
+                            LecturerId = model.LecturerId.Value,
+                            SubjectId = model.SubjectId.Value,
+                            SurveyId = model.SurveyId.Value,
+                            QuestionId = q.QuestionId,
+                            QuestionAnswer = new QuestionAnswer() { Score = S }
+                        }
+                    );
+                }
+                _context.Answers.AddRange(answers);
+
+                _context.SaveChanges();
+
+                return View("Success");
+            }
+            /**/
+            var Faculties = from f in _context.Faculties
+                            select new SelectListItem
+                            {
+                                Value = f.FacultyId.ToString(),
+                                Text = f.ShortName
+                            };
+
+            var Lecturers = from l in _context.Lecturers
+                            select new SelectListItem
+                            {
+                                Value = l.LecturerId.ToString(),
+                                Text = l.FirstName
+                            };
+
+            model.AvailableSpecialties = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Value = null,
+                    Text = " "
+                }
             };
 
-            var answers = new List<Answer>();
-
-            var query = _context.Questions
-               .Where(q => q.SurveyId == model.SurveyId);
-
-            var questions = query.ToList();
-            foreach (var q in questions)
+            model.Subjects = new List<SelectListItem>()
             {
-                int S = 0;
-                if (!string.IsNullOrWhiteSpace(Request.Form[q.QuestionId.ToString()]))
+                new SelectListItem
                 {
-                    S = Int32.Parse(Request.Form[q.QuestionId.ToString()]);
+                    Value = null,
+                    Text = " "
                 }
+            };
 
-                answers.Add(
-                    new Answer()
-                    {
-                        Student = student,
-                        LecturerId = model.LecturerId,
-                        SubjectId = model.SubjectId,
-                        SurveyId = model.SurveyId,
-                        QuestionId = q.QuestionId,
-                        QuestionAnswer = new QuestionAnswer() { Score = S }
-                    }
-                );
-            }
-            _context.Answers.AddRange(answers);
+            var Years = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Value = "1",
+                    Text = "1"
+                },
+                new SelectListItem
+                {
+                    Value = "2",
+                    Text = "2"
+                },
+                new SelectListItem
+                {
+                    Value = "3",
+                    Text = "3"
+                },
+                new SelectListItem
+                {
+                    Value = "4",
+                    Text = "4"
+                },
+                new SelectListItem
+                {
+                    Value = "5",
+                    Text = "5"
+                }
+            };
 
-            _context.SaveChanges();
+            var facultytip = new SelectListItem()
+            {
+                Value = null,
+                Text = "--- select faculty ---"
+            };
+            var lecturertip = new SelectListItem()
+            {
+                Value = null,
+                Text = "--- select lecturer ---"
+            };
+            var yeartip = new SelectListItem()
+            {
+                Value = null,
+                Text = "--- select year ---"
+            };
 
+            List<SelectListItem> FacList = Faculties.ToList();
+            List<SelectListItem> LecList = Lecturers.ToList();
+            FacList.Insert(0, facultytip);
+            LecList.Insert(0, lecturertip);
+            Years.Insert(0, yeartip);
 
+            model.Faculties = new SelectList(FacList, "Value", "Text");
+            model.Lecturers = new SelectList(LecList, "Value", "Text");
+            model.Years = new SelectList(Years, "Value", "Text");
 
-            return View("Success");
+            model.Years = new SelectList(new[] { 1, 2, 3, 4, 5 });
+
+            var id = _context.Surveys.Where(s => s.Name == "Best lecturer").FirstOrDefault().SurveyId;
+
+            var queryQuestions = _context.Questions
+                .Where(q => q.SurveyId == id);
+
+            ViewBag.SurveyId = id;
+
+            ViewData["Questions"] = queryQuestions.ToList();
+            /**/
+            return View(model);
         }
 
 
@@ -256,6 +363,19 @@ namespace OSS.Controllers
                 return Json(subjects);
             }
             return null;
+        }
+
+
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
         }
 
     }

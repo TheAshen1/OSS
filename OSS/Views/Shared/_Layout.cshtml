@@ -118,7 +118,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - OSS</p>
+            <div class="col-md-6"> <p>&copy; 2018 - OSS</p></div>
+            <div class="col-md-6">
+                <div>
+                    @await Html.PartialAsync("_SelectLanguagePartial")
+                </div>
+            </div>
+           
         </footer>
     </div>
 
