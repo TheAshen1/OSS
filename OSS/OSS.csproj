@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus.COre" Version="1.5.4" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" PrivateAssets="All" />
+    <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

@@ -61,3 +61,18 @@ btn > a{
     border-radius: 5px;
     width: 250px;
 }
+
+
+input[type=radio] {
+    width: 1.2em;
+}
+
+.radio-input {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.required .control-label:after {
+    content: "*";
+    color: red;
+}
