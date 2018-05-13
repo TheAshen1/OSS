@@ -1,4 +1,4 @@
-﻿$('#LecturerId').change(function () {
+﻿$('#LecturerId').focusout(function () {
     var selectedLecturerId = $("#LecturerId").val();
     var subjectSelect = $('#SubjectId');
     subjectSelect.empty();

@@ -1,75 +1,76 @@
-﻿@model OSS.Models.SurveySystemModels.ViewModel
-@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model OSS.Models.SurveySystemModels.SurveyViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 <div class="row">
     <div class="jumbotron marginTop">
-        <h2>Best lecturer survey</h2>
+        <h2>@Localizer["Message"]</h2>
     </div>
 
-</div>
-@section scripts{
-    <script src="~/js/GetSpecialties.js"></script>
-    <script src="~/js/GetSubjects.js"></script>
-}
+    @section scripts{
+        <script src="~/js/GetSpecialties.js"></script>
+        <script src="~/js/GetSubjects.js"></script>
+    }
 
-<form asp-action="SurveySubmit" asp-controller="Home" asp-antiforgery="true">
-    <div class="row">
-        <div class="col-md-4">
+    <form asp-action="Index" asp-controller="Home" asp-antiforgery="true">
+        <div class="row">
+            <div class="col-md-4">
 
-            <div class="form-group">
-                <label asp-for="FacultyId" class="control-label"></label>
-                <select asp-for="FacultyId" class="form-control" asp-items="Model.Faculties" required></select>
-                <span asp-validation-for="FacultyId"></span>
+                <div class="form-group required">
+                    <label asp-for="FacultyId" class="control-label"></label>
+                    <select asp-for="FacultyId" class="form-control" asp-items="Model.Faculties"></select>
+                    <span asp-validation-for="FacultyId"></span>
+                </div>
+
+                <div class="form-group required">
+                    <label asp-for="SpecialtyId" class="control-label"></label>
+                    <select asp-for="SpecialtyId" class="form-control" asp-items="Model.AvailableSpecialties"></select>
+                    <span asp-validation-for="SpecialtyId"></span>
+                </div>
+                <div class="form-group required">
+                    <label asp-for="Gender" class="control-label"></label>
+                    <input asp-for="Gender" type="radio" value="Male" />@Localizer["Male"]
+                    <input asp-for="Gender" type="radio" value="Female" />@Localizer["Female"]
+                    <span asp-validation-for="Gender"></span>
+                </div>
+                <div class="form-group required">
+                    <label asp-for="Year" class="control-label"></label>
+                    <select asp-for="Year" class="form-control" asp-items="Model.Years"></select>
+                    <span asp-validation-for="Year"></span>
+                </div>
+                <div class="form-group required">
+                    <label asp-for="LecturerId" class="control-label"></label>
+                    <select asp-for="LecturerId" class="form-control" asp-items="Model.Lecturers"></select>
+                    <span asp-validation-for="LecturerId"></span>
+                </div>
+                <div class="form-group required">
+                    <label asp-for="SubjectId" class="control-label"></label>
+                    <select asp-for="SubjectId" class="form-control" asp-items="Model.Subjects"></select>
+                    <span asp-validation-for="SubjectId"></span>
+                </div>
+                <input asp-for="SurveyId" type="hidden" value="@ViewBag.SurveyId" />
+
             </div>
 
-            <div class="form-group">
-                <label asp-for="SpecialtyId" class="control-label"></label>
-                <select asp-for="SpecialtyId" class="form-control" asp-items="Model.AvailableSpecialties" required></select>
-                <span asp-validation-for="SpecialtyId"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" type="radio" value="Male" required />M
-                <input asp-for="Gender" type="radio" value="Female" required />F
-                <span asp-validation-for="Gender"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <select asp-for="Year" class="form-control" asp-items="Model.Years" required></select>
-                <span asp-validation-for="Year"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LecturerId" class="control-label"></label>
-                <select asp-for="LecturerId" class="form-control" asp-items="Model.Lecturers" required></select>
-                <span asp-validation-for="LecturerId"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubjectId" class="control-label"></label>
-                <select asp-for="SubjectId" class="form-control" asp-items="Model.Subjects" required></select>
-                <span asp-validation-for="SubjectId"></span>
-            </div>
-            <input asp-for="SurveyId" type="hidden" value="@ViewBag.SurveyId" />
+            <div class="col-md-8">
 
-        </div>
-
-        <div class="col-md-8">
-
-            @foreach (var q in ViewBag.Questions as IEnumerable<OSS.Models.SurveySystemModels.Question>)
-            {
-                <p>@q.Text</p>
-                @for (var i = 1; i <= 12; i++)
+                @foreach (var q in ViewBag.Questions as IEnumerable<OSS.Models.SurveySystemModels.Question>)
                 {
-                    <div style="display:inline-block; margin-right:2px;">
-                        @i <br/>
-                        <input name="@q.QuestionId" type="radio" value="@i" required />
-                    </div>
+                    <p>@q.Text</p>
+                    @for (var i = 1; i <= 12; i++)
+                    {
+                        <div class="radio-input">
+                            <label>@i</label> <br />
+                            <input name="@q.QuestionId" type="radio" value="@i" />
+                        </div>
+                    }
                 }
-            }
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-default marginTop" />
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-default marginTop" />
+                </div>
 
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>

@@ -11,6 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using OSS.Data;
 using OSS.Models;
 using OSS.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using Microsoft.ApplicationInsights.AspNetCore;
 
 namespace OSS
 {
@@ -26,6 +31,7 @@ namespace OSS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -33,11 +39,28 @@ namespace OSS
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc();
+            //
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            
+            services.AddMvc()
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("uk"),
+                    new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("uk");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
 
             services.AddDbContext<SurveySystemDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("SurveySystemDbConnection")));
@@ -46,6 +69,11 @@ namespace OSS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
+            /*Available cultures*/
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
+            /**/
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -56,6 +84,7 @@ namespace OSS
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
             /**/
             CreateRoles(serviceProvider).Wait();
             /**/
@@ -76,18 +105,6 @@ namespace OSS
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
-            //if(!UserManager.Users.Any())
-            //{
-            //    var poweruser = new ApplicationUser
-            //    {
-            //        UserName = "Admin",
-            //        Email = "admin@email.com",
-            //    };
-            //    string adminPassword = "12345678";
-
-            //     UserManager.CreateAsync(poweruser, adminPassword);
-            //}
-
             //initializing custom roles 
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -103,13 +120,6 @@ namespace OSS
                 }
             }
 
-            //Here you could create a super user who will maintain the web app
-            //var poweruser = new ApplicationUser
-            //{
-
-            //    UserName = Configuration["AppSettings:AdminUserEmail"],
-            //    Email = Configuration["AppSettings:AdminUserEmail"],
-            //};
             foreach (var role in roleNames) {
                 var user = new ApplicationUser
                 {
@@ -132,23 +142,6 @@ namespace OSS
                     }
                 }
             }
-
-            //Ensure you have these values in your appsettings.json file
-            //string userPWD = Configuration["AppSettings:AdminUserPassword"];
-            //var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
-
-            //if (_user == null)
-            //{
-            //    var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
-            //    if (createPowerUser.Succeeded)
-            //    {
-            //        //here we tie the new user to the role
-            //        await UserManager.AddToRoleAsync(poweruser, "Admin");
-
-            //    }
-            //}
-
-
 
         }
     }

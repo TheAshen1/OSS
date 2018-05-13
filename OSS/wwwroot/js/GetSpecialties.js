@@ -1,4 +1,4 @@
-﻿$('#FacultyId').change(function () {
+﻿$('#FacultyId').focusout(function () {
     var selectedFacultyId = $("#FacultyId").val();
     var specialtySelect = $('#SpecialtyId');
     specialtySelect.empty();
