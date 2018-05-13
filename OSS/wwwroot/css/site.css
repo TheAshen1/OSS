@@ -48,3 +48,16 @@
         float: left;
         margin: 0 5px 0 0;
     }
+
+btn > a{
+    text-decoration: none;
+}
+
+.upload {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid rgb(204, 204, 204);
+   
+    border-radius: 5px;
+    width: 250px;
+}

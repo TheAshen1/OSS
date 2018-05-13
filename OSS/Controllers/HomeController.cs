@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -16,10 +20,12 @@ namespace OSS.Controllers
     public class HomeController : Controller
     {
         private readonly SurveySystemDbContext _context;
+        private readonly IHostingEnvironment _appEnvironment;
 
-        public HomeController(SurveySystemDbContext context)
+        public HomeController(SurveySystemDbContext context, IHostingEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
 
         public IActionResult Index()
@@ -256,6 +262,28 @@ namespace OSS.Controllers
                 return Json(subjects);
             }
             return null;
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
+        {
+            if (uploadedFile != null)
+            {
+   
+                string path = Path.Combine(_appEnvironment.WebRootPath , "files", uploadedFile.FileName);
+
+                // сохраняем файл в папку Files в каталоге wwwroot
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+                _context.Files.Add(file);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
 
     }

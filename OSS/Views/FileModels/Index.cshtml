@@ -1,0 +1,20 @@
+﻿@model IEnumerable<OSS.Models.SurveySystemModels.FileModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<h3>Выберите файл для загрузки</h3>
+<form asp-action="AddFile" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedFile" /><br>
+    <input type="submit" value="Загрузить" />
+</form>
+
+<h3>Все файлы</h3>
+@foreach (var f in Model)
+{
+    <p><img src="@Url.Content(f.Path)"></p>
+}

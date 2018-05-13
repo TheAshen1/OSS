@@ -4,6 +4,9 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section scripts{
+    <script src="~/js/UploadFile.js"></script>
+}
 
 <h2>Lecturers</h2>
 
@@ -36,32 +39,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MiddleName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Initials)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Faculty.ShortName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photo)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Initials)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Faculty.ShortName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Photo)
+                </td>
 
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LecturerId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.LecturerId">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LecturerId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LecturerId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div class="row">
+    <div class="btn btn-default">
+        <a asp-action="ExportLecturers">Export</a>
+    </div>
+    <div class="upload">
+        <input id="loadedFile" class="form-group" type="file" /><br>
+        <input id="importLecturer" class="form-group" type="submit" value="Import" />
+    </div>
+  
+</div>

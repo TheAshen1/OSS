@@ -9,6 +9,8 @@ namespace OSS.Data
 {
     public class SurveySystemDbContext : DbContext
     {
+        public DbSet<FileModel> Files { get; set; }
+        //
         public DbSet<Lecturer> Lecturers { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
